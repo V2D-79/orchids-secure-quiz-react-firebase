@@ -4,6 +4,8 @@ import VisualEditsMessenger from "../visual-edits/VisualEditsMessenger";
 import ErrorReporter from "@/components/ErrorReporter";
 import Script from "next/script";
 
+
+
 export const metadata: Metadata = {
   title: "C & C++ Programming Quiz",
   description: "Online exam platform with anti-cheating features for C and C++ programming",

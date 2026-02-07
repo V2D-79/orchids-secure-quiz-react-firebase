@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useQuiz } from "@/context/QuizContext";
 import LoginPage from "./LoginPage";
 import QuizPage from "./QuizPage";
-import ResultsPage from "./ResultsPage";
+import ThankYouPage from "./ThankYouPage";
 
 export default function QuizApp() {
   const [mounted, setMounted] = useState(false);
@@ -29,7 +29,7 @@ export default function QuizApp() {
     case "in_progress":
       return <QuizPage />;
     case "submitted":
-      return <ResultsPage />;
+      return <ThankYouPage />;
     default:
       return <LoginPage />;
   }

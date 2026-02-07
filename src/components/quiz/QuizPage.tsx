@@ -19,8 +19,10 @@ export default function QuizPage() {
 
   const [showWarningModal, setShowWarningModal] = useState(false);
   const [showSubmitModal, setShowSubmitModal] = useState(false);
+  const [hasWarned, setHasWarned] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const hasSetupRef = useRef(false);
+  const lastVisibilityChangeRef = useRef<number>(0);
 
   const currentQuestion = questions[state.currentQuestionIndex];
   const answeredCount = Object.keys(state.answers).length;
@@ -57,26 +59,32 @@ export default function QuizPage() {
   // Handle visibility change callback
   const handleVisibilityChange = useCallback(() => {
     if (document.hidden && state.status === "in_progress") {
-      const shouldSubmit = addWarning();
-      if (shouldSubmit) {
-        submitQuiz();
-      } else {
-        setShowWarningModal(true);
-      }
-    }
-  }, [state.status, addWarning, submitQuiz]);
+      const now = Date.now();
+      // Prevent multiple triggers within 1 second
+      if (now - lastVisibilityChangeRef.current < 1000) return;
+      lastVisibilityChangeRef.current = now;
 
-  // Handle blur callback
-  const handleBlur = useCallback(() => {
-    if (state.status === "in_progress") {
-      const shouldSubmit = addWarning();
-      if (shouldSubmit) {
+      if (state.warnings >= config.maxWarnings) {
+        // Auto-submit if warnings exceeded
         submitQuiz();
+      } else if (!hasWarned) {
+        // First time warning
+        const shouldSubmit = addWarning();
+        setHasWarned(true);
+        if (shouldSubmit) {
+          submitQuiz();
+        } else {
+          setShowWarningModal(true);
+        }
       } else {
-        setShowWarningModal(true);
+        // Second time - auto submit
+        submitQuiz();
       }
+    } else {
+      // When coming back to tab
+      setHasWarned(false);
     }
-  }, [state.status, addWarning, submitQuiz]);
+  }, [state.status, state.warnings, config.maxWarnings, hasWarned, addWarning, submitQuiz]);
 
   // Anti-cheating measures
   useEffect(() => {
@@ -100,19 +108,10 @@ export default function QuizPage() {
       }
     };
 
-    // Warn before refresh/close
-    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      e.preventDefault();
-      e.returnValue = "Your exam will be submitted if you leave!";
-      return e.returnValue;
-    };
-
     document.addEventListener("copy", handleCopy);
     document.addEventListener("contextmenu", handleContextMenu);
     document.addEventListener("keydown", handleKeyDown);
     document.addEventListener("visibilitychange", handleVisibilityChange);
-    window.addEventListener("blur", handleBlur);
-    window.addEventListener("beforeunload", handleBeforeUnload);
 
     // Disable text selection via CSS
     document.body.style.userSelect = "none";
@@ -123,13 +122,11 @@ export default function QuizPage() {
       document.removeEventListener("contextmenu", handleContextMenu);
       document.removeEventListener("keydown", handleKeyDown);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
-      window.removeEventListener("blur", handleBlur);
-      window.removeEventListener("beforeunload", handleBeforeUnload);
       document.body.style.userSelect = "";
       document.body.style.webkitUserSelect = "";
       hasSetupRef.current = false;
     };
-  }, [state.status, handleVisibilityChange, handleBlur]);
+  }, [state.status, handleVisibilityChange]);
 
   const handleSubmit = () => {
     setShowSubmitModal(true);
@@ -149,46 +146,56 @@ export default function QuizPage() {
 
   return (
     <div className="min-h-screen bg-gray-100 select-none">
-      {/* Header */}
-      <header className="bg-white shadow-md sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-          <div>
-            <h1 className="text-lg font-bold text-gray-800">{config.title}</h1>
-            <p className="text-sm text-gray-500">
-              {state.userInfo?.name} | Question {state.currentQuestionIndex + 1} of {questions.length}
-            </p>
-          </div>
-          
-          <div className="flex items-center gap-6">
-            {/* Warnings indicator */}
-            <div className="flex items-center gap-2">
-              <svg className="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-              </svg>
-              <span className="text-sm font-medium text-gray-700">
-                Warnings: {state.warnings}/{config.maxWarnings}
-              </span>
+     {/* Header with Logo */}
+<header className="bg-white shadow-md sticky top-0 z-10">
+  <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+    <div className="flex items-center gap-3">
+      {/* Logo Image Section */}
+      <div className="w-25 h-15 rounded-xl bg-white flex items-center justify-center">
+              <img
+                src="/img/LogoVector.png"
+                alt="Logo"
+                className="w-25 h-30 object-contain"
+              />
             </div>
+      <div>
+        <h1 className="text-lg font-bold text-gray-800">{config.title}</h1>
+        <p className="text-sm text-gray-500">
+          {state.userInfo?.name} | Question {state.currentQuestionIndex + 1} of {questions.length}
+        </p>
+      </div>
+    </div>
+    
+    <div className="flex items-center gap-6">
+      {/* Warnings indicator */}
+      <div className="flex items-center gap-2">
+        <svg className="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        </svg>
+        <span className="text-sm font-medium text-gray-700">
+          Warnings: {state.warnings}/{config.maxWarnings}
+        </span>
+      </div>
 
-            {/* Timer */}
-            <div className={`flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-lg ${getTimerColor()}`}>
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <span className="font-mono font-bold text-lg">
-                {formatTime(state.timeRemaining)}
-              </span>
-            </div>
+      {/* Timer */}
+      <div className={`flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-lg ${getTimerColor()}`}>
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span className="font-mono font-bold text-lg">
+          {formatTime(state.timeRemaining)}
+        </span>
+      </div>
 
-            <button
-              onClick={handleSubmit}
-              className="px-4 py-2 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition-colors"
-            >
-              Submit Exam
-            </button>
-          </div>
-        </div>
-      </header>
+      <button
+        onClick={handleSubmit}
+        className="px-4 py-2 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition-colors"
+      >
+        Submit Exam
+      </button>
+    </div>
+  </div>
+</header>
 
       <div className="max-w-7xl mx-auto px-4 py-6 flex gap-6">
         {/* Question Panel */}
@@ -200,7 +207,7 @@ export default function QuizPage() {
                 {currentQuestion.category}
               </span>
               <span className="text-gray-400">|</span>
-              <span className="text-gray-600">Question {state.currentQuestionIndex + 1}</span>
+              <span className="text-gray-600">Question {state.currentQuestionIndex + 1} | 1 Mark</span>
             </div>
 
             {/* Question text */}
@@ -327,7 +334,7 @@ export default function QuizPage() {
       {/* Warning Modal */}
       {showWarningModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-6 max-w-md w-full mx-4 animate-bounce">
+          <div className="bg-white rounded-xl p-6 max-w-md w-full mx-4">
             <div className="text-center">
               <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">

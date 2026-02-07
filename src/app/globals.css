@@ -120,3 +120,39 @@
     @apply bg-background text-foreground;
   }
 }
+
+
+
+
+
+
+/* In app/globals.css or app/layout.tsx */
+:root {
+  --orchids-toolbar-size: 20px; /* Adjust this value */
+}
+
+/* Reduce Orchids development toolbar logo */
+.orchids-toolbar,
+.orchids-dev-toolbar,
+[class*="orchids"],
+[class*="Orchids"] {
+  transform: scale(0.7) !important; /* Reduce to 70% */
+  transform-origin: bottom left !important;
+}
+
+/* Specifically target the logo */
+.orchids-toolbar-logo,
+.orchids-logo,
+[class*="logo"][class*="orchids"] {
+  width: 20px !important; /* Set specific size */
+  height: 20px !important;
+  min-width: 20px !important;
+  min-height: 20px !important;
+}
+
+/* Target fixed elements in bottom-left */
+.fixed.bottom-0.left-0,
+.fixed[style*="left: 0"][style*="bottom: 0"] {
+  transform: scale(0.7) !important;
+  transform-origin: bottom left !important;
+}

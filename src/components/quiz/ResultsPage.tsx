@@ -6,13 +6,11 @@ import { quizQuestions } from "@/data/quizQuestions";
 export default function ResultsPage() {
   const { state, config, resetQuiz } = useQuiz();
   
-  const isPassed = state.score >= config.passingScore;
+  const isPassed = state.percentage >= config.passingScore;
   
   // Calculate detailed results
   const totalQuestions = quizQuestions.length;
-  const correctAnswers = quizQuestions.filter(
-    (q) => state.answers[q.id] === q.correctAnswer
-  ).length;
+  const correctAnswers = state.marks; // Already calculated
   const wrongAnswers = Object.keys(state.answers).length - correctAnswers;
   const unanswered = totalQuestions - Object.keys(state.answers).length;
 
@@ -34,6 +32,8 @@ export default function ResultsPage() {
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
           {/* Header */}
           <div className={`px-8 py-10 text-center ${isPassed ? "bg-gradient-to-r from-green-500 to-emerald-600" : "bg-gradient-to-r from-red-500 to-rose-600"}`}>
+            <h2 className="text-2xl font-bold text-white mb-2">Online Exam Results</h2>
+            
             <div className={`w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-4 ${isPassed ? "bg-white/20" : "bg-white/20"}`}>
               {isPassed ? (
                 <svg className="w-14 h-14 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -53,14 +53,17 @@ export default function ResultsPage() {
             </p>
           </div>
 
-          {/* Score Circle */}
+          {/* Marks Circle */}
           <div className="relative -mt-8 flex justify-center">
             <div className="bg-white rounded-full p-2 shadow-lg">
               <div className={`w-32 h-32 rounded-full flex flex-col items-center justify-center ${isPassed ? "bg-green-100" : "bg-red-100"}`}>
                 <span className={`text-4xl font-bold ${isPassed ? "text-green-600" : "text-red-600"}`}>
-                  {state.score}%
+                  {state.marks}/{state.totalMarks}
                 </span>
-                <span className="text-gray-500 text-sm">Score</span>
+                <span className="text-gray-500 text-sm">Marks</span>
+                <span className={`text-sm font-medium ${isPassed ? "text-green-600" : "text-red-600"}`}>
+                  ({state.percentage}%)
+                </span>
               </div>
             </div>
           </div>
@@ -78,14 +81,17 @@ export default function ResultsPage() {
               <div className="bg-green-50 rounded-xl p-4 text-center">
                 <div className="text-2xl font-bold text-green-600">{correctAnswers}</div>
                 <div className="text-sm text-green-700">Correct</div>
+                <div className="text-xs text-green-600">(+1 mark each)</div>
               </div>
               <div className="bg-red-50 rounded-xl p-4 text-center">
                 <div className="text-2xl font-bold text-red-600">{wrongAnswers}</div>
                 <div className="text-sm text-red-700">Wrong</div>
+                <div className="text-xs text-red-600">(0 marks)</div>
               </div>
               <div className="bg-gray-50 rounded-xl p-4 text-center">
                 <div className="text-2xl font-bold text-gray-600">{unanswered}</div>
                 <div className="text-sm text-gray-700">Skipped</div>
+                <div className="text-xs text-gray-600">(0 marks)</div>
               </div>
               <div className="bg-blue-50 rounded-xl p-4 text-center">
                 <div className="text-2xl font-bold text-blue-600">{getTimeTaken()}</div>
@@ -106,14 +112,24 @@ export default function ResultsPage() {
                   <span className="font-medium text-gray-800">{totalQuestions}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Passing Score</span>
-                  <span className="font-medium text-gray-800">{config.passingScore}%</span>
+                  <span className="text-gray-600">Total Marks</span>
+                  <span className="font-medium text-gray-800">{state.totalMarks}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Your Score</span>
+                  <span className="text-gray-600">Your Marks</span>
                   <span className={`font-medium ${isPassed ? "text-green-600" : "text-red-600"}`}>
-                    {state.score}%
+                    {state.marks}/{state.totalMarks}
                   </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Percentage</span>
+                  <span className={`font-medium ${isPassed ? "text-green-600" : "text-red-600"}`}>
+                    {state.percentage}%
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Passing Percentage</span>
+                  <span className="font-medium text-gray-800">{config.passingScore}%</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Warnings Received</span>
@@ -132,11 +148,14 @@ export default function ResultsPage() {
 
             {/* Action Button */}
             <div className="text-center">
+              <p className="text-gray-500 mb-4 text-sm">
+                {state.dbError ? state.dbError : 'Your results have been saved to the database.'}
+              </p>
               <button
                 onClick={resetQuiz}
                 className="px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg font-semibold hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl"
               >
-                Take Another Quiz
+                Back to Home
               </button>
             </div>
           </div>
@@ -144,7 +163,7 @@ export default function ResultsPage() {
 
         {/* Answer Review Section */}
         <div className="mt-8 bg-white rounded-2xl shadow-xl p-8">
-          <h3 className="text-xl font-bold text-gray-800 mb-6">Answer Review</h3>
+          <h3 className="text-xl font-bold text-gray-800 mb-6">Answer Review (1 Mark per Question)</h3>
           <div className="space-y-6">
             {quizQuestions.map((question, index) => {
               const userAnswer = state.answers[question.id];
@@ -170,7 +189,14 @@ export default function ResultsPage() {
                       {index + 1}
                     </span>
                     <div className="flex-1">
-                      <p className="font-medium text-gray-800 mb-2">{question.question}</p>
+                      <div className="flex justify-between items-start mb-2">
+                        <p className="font-medium text-gray-800">{question.question}</p>
+                        <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                          isCorrect ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
+                        }`}>
+                          {isCorrect ? "✓ 1/1 Mark" : "✗ 0/1 Mark"}
+                        </span>
+                      </div>
                       <div className="space-y-1 text-sm">
                         {question.options.map((option, optIndex) => {
                           const isUserAnswer = userAnswer === optIndex;
@@ -195,7 +221,7 @@ export default function ResultsPage() {
                         })}
                       </div>
                       {!wasAnswered && (
-                        <p className="mt-2 text-gray-500 text-sm italic">Not answered</p>
+                        <p className="mt-2 text-gray-500 text-sm italic">Not answered (0 marks)</p>
                       )}
                     </div>
                   </div>

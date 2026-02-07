@@ -1,0 +1,29 @@
+/* Hide any development indicators */
+.next-build-indicator,
+.nextjs-build-indicator,
+.nextjs-dev-indicator,
+[class*="build-indicator"],
+[class*="dev-indicator"],
+[class*="BuildIndicator"],
+[class*="DevIndicator"] {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* Hide fixed positioned elements in bottom corners */
+.fixed[style*="left: 0"],
+.fixed[style*="bottom: 0"],
+.fixed[style*="bottom-left"],
+.fixed[style*="bottomRight"] {
+  display: none !important;
+}
+
+/* Hide any element with 'N' logo or similar */
+[class*="vercel"],
+[class*="Vercel"],
+[class*="nextjs"],
+[class*="Nextjs"] {
+  display: none !important;
+}

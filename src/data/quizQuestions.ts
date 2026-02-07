@@ -175,8 +175,8 @@ export const quizQuestions: Question[] = [
 ];
 
 export const quizConfig = {
-  title: "C & C++ Programming Quiz",
-  duration: 30 * 60, // 30 minutes in seconds
+  title: "Programming Quiz",
+  duration: 35* 60, // 35 minutes in seconds
   totalQuestions: quizQuestions.length,
   passingScore: 60, // percentage
   maxWarnings: 1 // number of tab switches allowed before auto-submit
