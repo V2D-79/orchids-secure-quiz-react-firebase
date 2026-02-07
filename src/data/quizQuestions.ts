@@ -171,6 +171,65 @@ export const quizQuestions: Question[] = [
     options: ["<stdio.h>", "<iostream>", "<conio.h>", "<string.h>"],
     correctAnswer: 1,
     category: "C++"
+  },
+   {
+    id: 21,
+    question: "What is a constructor in C++?",
+    options: [
+      "A function that destroys objects",
+      "A special function that initializes objects",
+      "A function that copies objects",
+      "A static member function"
+    ],
+    correctAnswer: 1,
+    category: "C++"
+  },
+  {
+    id: 22,
+    question: "Which of the following is NOT a feature of C++?",
+    options: ["Encapsulation", "Inheritance", "Garbage Collection", "Polymorphism"],
+    correctAnswer: 2,
+    category: "C++"
+  },
+  {
+    id: 23,
+    question: "What is the correct syntax for a single-line comment in C++?",
+    options: ["/* comment */", "// comment", "# comment", "-- comment"],
+    correctAnswer: 1,
+    category: "C++"
+  },
+  {
+    id: 24,
+    question: "What does 'cin' stand for in C++?",
+    options: ["Console input", "Character input", "Common input", "C input"],
+    correctAnswer: 0,
+    category: "C++"
+  },
+  {
+    id: 25,
+    question: "Which keyword is used to define a constant in C++?",
+    options: ["constant", "const", "final", "static"],
+    correctAnswer: 1,
+    category: "C++"
+  },
+  {
+    id: 26,
+    question: "What is function overloading in C++?",
+    options: [
+      "Functions with same name but different return types",
+      "Functions with same name but different parameters",
+      "Functions that override parent class functions",
+      "Functions that are called recursively"
+    ],
+    correctAnswer: 1,
+    category: "C++"
+  },
+  {
+    id: 27,
+    question: "Which header file is required for using 'cout' in C++?",
+    options: ["<stdio.h>", "<iostream>", "<conio.h>", "<string.h>"],
+    correctAnswer: 1,
+    category: "C++"
   }
 ];
 
