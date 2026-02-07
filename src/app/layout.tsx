@@ -7,8 +7,8 @@ import Script from "next/script";
 
 
 export const metadata: Metadata = {
-  title: "C & C++ Programming Quiz",
-  description: "Online exam platform with anti-cheating features for C and C++ programming",
+  title: "KIT Online Exam",
+  description: "kitonlineexam",
 };
 
 export default function RootLayout({
