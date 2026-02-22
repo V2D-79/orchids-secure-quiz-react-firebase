@@ -327,9 +327,10 @@ export default function QuizPage() {
             </div>
 
             {/* Question text */}
-            <h2 className="text-base sm:text-lg md:text-xl font-semibold text-gray-800 mb-4 sm:mb-6">
-              {currentQuestion.question}
-            </h2>
+          {/* Question text */}
+<h2 className="text-base sm:text-lg md:text-xl font-semibold text-gray-800 mb-4 sm:mb-6 whitespace-pre-wrap font-mono">
+  {currentQuestion.question}
+</h2>
 
             {/* Options */}
             <div className="space-y-2 sm:space-y-3">

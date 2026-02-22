@@ -6,7 +6,7 @@ export interface Question {
   id: number;
   question: string;
   options: string[];
-  correctAnswer: number; // index (0-3)
+  correctAnswer: number;
   category: "C" | "C++";
 }
 
@@ -16,7 +16,8 @@ export const quizQuestions: Question[] = [
 
   {
     id: 1,
-    question: "What happens if a string in C does not contain '\\0' at the end?",
+    question:
+      "What happens if a string in C does not contain '\\0' at the end?",
     options: [
       "It will still print correctly",
       "It may cause undefined behavior when used with string functions",
@@ -26,20 +27,41 @@ export const quizQuestions: Question[] = [
     correctAnswer: 1,
     category: "C"
   },
+
   {
     id: 2,
-    question: "Output of: int a=10,b=20; printf(\"%d\", a++ + ++b);",
+    question:
+`What will be the output?
+
+#include <stdio.h>
+int main(){
+    int a = 10;
+    int b = 20;
+    printf("%d", a++ + ++b);
+    return 0;
+}`,
     options: ["30", "31", "Error", "Undefined"],
     correctAnswer: 1,
     category: "C"
   },
+
   {
     id: 3,
-    question: "char a[]=\"abc\"; char b[]=\"abc\"; if(a==b) ?",
+    question:
+`Output?
+
+char a[] = "abc";
+char b[] = "abc";
+
+if(a == b)
+    printf("Same");
+else
+    printf("Different");`,
     options: ["Same", "Different", "Error", "Garbage"],
     correctAnswer: 1,
     category: "C"
   },
+
   {
     id: 4,
     question: "Which of the following is NOT a storage class?",
@@ -47,27 +69,44 @@ export const quizQuestions: Question[] = [
     correctAnswer: 3,
     category: "C"
   },
+
   {
     id: 5,
-    question: "What is the output of sizeof(5.0)?",
+    question:
+`What is the output?
+
+printf("%d", sizeof(5.0));`,
     options: ["4", "8", "2", "Compiler dependent"],
     correctAnswer: 1,
     category: "C"
   },
+
   {
     id: 6,
-    question: "int a=0; if(a=10) printf(\"Yes\"); else printf(\"No\");",
+    question:
+`What is the output?
+
+int a = 0;
+if(a = 10)
+    printf("Yes");
+else
+    printf("No");`,
     options: ["Yes", "No", "Error", "Undefined"],
     correctAnswer: 0,
     category: "C"
   },
+
   {
     id: 7,
-    question: "printf(\"%d\", printf(\"Hack\")); Output?",
+    question:
+`Output of the following code?
+
+printf("%d", printf("Hack"));`,
     options: ["Hack", "Hack4", "4Hack", "Error"],
     correctAnswer: 1,
     category: "C"
   },
+
   {
     id: 8,
     question: "What does sizeof() return?",
@@ -75,13 +114,19 @@ export const quizQuestions: Question[] = [
     correctAnswer: 2,
     category: "C"
   },
+
   {
     id: 9,
-    question: "int *p; printf(\"%d\", *p); What happens?",
+    question:
+`What will happen?
+
+int *p;
+printf("%d", *p);`,
     options: ["Prints 0", "Compile-time error", "Garbage value", "Segmentation fault"],
     correctAnswer: 2,
     category: "C"
   },
+
   {
     id: 10,
     question: "Which of the following is a logical operator?",
@@ -89,27 +134,60 @@ export const quizQuestions: Question[] = [
     correctAnswer: 2,
     category: "C"
   },
+
   {
     id: 11,
-    question: "int x=10; printf(\"%d\", x>5 && x<20);",
+    question:
+`What will be printed?
+
+int x = 10;
+printf("%d", x > 5 && x < 20);`,
     options: ["True", "False", "1", "0"],
     correctAnswer: 2,
     category: "C"
   },
+
   {
     id: 12,
-    question: "static variable inside function retains value between calls. Output of calling twice?",
+    question:
+`Output?
+
+#include <stdio.h>
+
+void fun(){
+    static int x = 5;
+    x++;
+    printf("%d ", x);
+}
+
+int main(){
+    fun();
+    fun();
+}`,
     options: ["6 6", "6 7", "5 6", "7 8"],
     correctAnswer: 1,
     category: "C"
   },
+
   {
     id: 13,
-    question: "Switch without break (case 5 → case 6 → default). Output?",
+    question:
+`Output?
+
+int x = 5;
+switch(x){
+case 5:
+    printf("A");
+case 6:
+    printf("B");
+default:
+    printf("C");
+}`,
     options: ["A", "AB", "ABC", "AC"],
     correctAnswer: 2,
     category: "C"
   },
+
   {
     id: 14,
     question: "Which file mode truncates file content?",
@@ -117,6 +195,7 @@ export const quizQuestions: Question[] = [
     correctAnswer: 2,
     category: "C"
   },
+
   {
     id: 15,
     question: "volatile keyword does what?",
@@ -129,6 +208,7 @@ export const quizQuestions: Question[] = [
     correctAnswer: 1,
     category: "C"
   },
+
   {
     id: 16,
     question: "char *str=\"Hello\" means:",
@@ -141,6 +221,7 @@ export const quizQuestions: Question[] = [
     correctAnswer: 2,
     category: "C"
   },
+
   {
     id: 17,
     question: "Why prefer malloc() over large local arrays?",
@@ -153,12 +234,13 @@ export const quizQuestions: Question[] = [
     correctAnswer: 1,
     category: "C"
   },
+
   {
     id: 18,
     question: "Why arrays are not directly assignable in C?",
     options: [
-      "Stored in heap",
-      "Not lvalues",
+      "Arrays are stored in heap",
+      "Arrays Not values",
       "Represent fixed memory blocks",
       "Passed by reference"
     ],
@@ -175,6 +257,7 @@ export const quizQuestions: Question[] = [
     correctAnswer: 1,
     category: "C++"
   },
+
   {
     id: 20,
     question: "mutable keyword allows modification of:",
@@ -187,6 +270,7 @@ export const quizQuestions: Question[] = [
     correctAnswer: 1,
     category: "C++"
   },
+
   {
     id: 21,
     question: "Base pointer to derived object requires ______ for proper destructor call.",
@@ -194,6 +278,7 @@ export const quizQuestions: Question[] = [
     correctAnswer: 1,
     category: "C++"
   },
+
   {
     id: 22,
     question: "Object slicing occurs when:",
@@ -206,6 +291,7 @@ export const quizQuestions: Question[] = [
     correctAnswer: 2,
     category: "C++"
   },
+
   {
     id: 23,
     question: "Function hiding occurs when:",
@@ -218,27 +304,43 @@ export const quizQuestions: Question[] = [
     correctAnswer: 0,
     category: "C++"
   },
+
   {
     id: 24,
-    question: "Recursive sum function fun(4) returns?",
+    question:
+`int fun(int n){
+    if(n==0) return 0;
+    return n + fun(n-1);
+}
+printf("%d", fun(4));`,
     options: ["10", "24", "16", "8"],
     correctAnswer: 0,
     category: "C++"
   },
+
   {
     id: 25,
-    question: "*p++ and *++p pointer expression output?",
+    question:
+`int arr[] = {10,20,30,40};
+int *p = arr;
+printf("%d %d", *p++, *++p);`,
     options: ["10 20", "10 30", "20 30", "20 40"],
     correctAnswer: 1,
     category: "C"
   },
+
   {
     id: 26,
-    question: "**q + 5 where q→p→a (a=5) gives?",
+    question:
+`int a = 5;
+int *p = &a;
+int **q = &p;
+printf("%d", **q + 5);`,
     options: ["5", "10", "Garbage", "Error"],
     correctAnswer: 1,
     category: "C"
   },
+
   {
     id: 27,
     question: "Function used for dynamic memory allocation in C?",
@@ -246,16 +348,20 @@ export const quizQuestions: Question[] = [
     correctAnswer: 1,
     category: "C"
   },
+
   {
     id: 28,
-    question: "*(arr+2) from {1,2,3,4} equals?",
+    question:
+`int arr[] = {1,2,3,4};
+printf("%d", *(arr+2));`,
     options: ["1", "2", "3", "4"],
     correctAnswer: 2,
     category: "C"
   },
+
   {
     id: 29,
-    question: "scanf(\"%4s\", str) means:",
+    question: `scanf("%4s", str); means:`,
     options: [
       "Read exactly 4 chars",
       "Read maximum 4 chars",
@@ -265,6 +371,7 @@ export const quizQuestions: Question[] = [
     correctAnswer: 1,
     category: "C"
   },
+
   {
     id: 30,
     question: "Main difference between overloading and overriding?",
@@ -277,6 +384,7 @@ export const quizQuestions: Question[] = [
     correctAnswer: 0,
     category: "C++"
   },
+
   {
     id: 31,
     question: "Which operator usually overloaded globally?",
@@ -284,6 +392,7 @@ export const quizQuestions: Question[] = [
     correctAnswer: 2,
     category: "C++"
   },
+
   {
     id: 32,
     question: "Main benefit of encapsulation?",
@@ -291,6 +400,7 @@ export const quizQuestions: Question[] = [
     correctAnswer: 2,
     category: "C++"
   },
+
   {
     id: 33,
     question: "Constants in C++ are also known as:",
@@ -298,6 +408,7 @@ export const quizQuestions: Question[] = [
     correctAnswer: 1,
     category: "C++"
   },
+
   {
     id: 34,
     question: "Function overloading means:",
@@ -310,20 +421,29 @@ export const quizQuestions: Question[] = [
     correctAnswer: 0,
     category: "C++"
   },
+
   {
     id: 35,
-    question: "*p=b where p points to a (a=5,b=10). Output?",
+    question:
+`int a = 5, b = 10;
+int *p = &a;
+*p = b;
+printf("%d %d", a, b);`,
     options: ["5 10", "10 10", "5 5", "Garbage"],
     correctAnswer: 1,
     category: "C"
   },
+
   {
     id: 36,
-    question: "printf(\"%d %d %d\", i, i++, ++i); behavior?",
+    question:
+`int i = 1;
+printf("%d %d %d", i, i++, ++i);`,
     options: ["1 2 3", "1 1 3", "Undefined behavior", "2 3 4"],
     correctAnswer: 2,
     category: "C"
   },
+
   {
     id: 37,
     question: "If base destructor is not virtual:",
@@ -336,6 +456,7 @@ export const quizQuestions: Question[] = [
     correctAnswer: 0,
     category: "C++"
   },
+
   {
     id: 38,
     question: "Purpose of const keyword in C?",
@@ -348,6 +469,7 @@ export const quizQuestions: Question[] = [
     correctAnswer: 1,
     category: "C"
   },
+
   {
     id: 39,
     question: "Which memory allocation happens at runtime?",
@@ -355,6 +477,7 @@ export const quizQuestions: Question[] = [
     correctAnswer: 2,
     category: "C"
   },
+
   {
     id: 40,
     question: "Dangling pointer is:",
@@ -369,11 +492,12 @@ export const quizQuestions: Question[] = [
   }
 ];
 
+
 // ================= QUIZ CONFIG =================
 
 export const quizConfig = {
   title: "C/C++ Final Programming Quiz",
-  duration: 35 * 60, // 35 minutes
+  duration: 35 * 60,
   totalQuestions: quizQuestions.length,
   passingScore: 60,
   maxWarnings: 1
