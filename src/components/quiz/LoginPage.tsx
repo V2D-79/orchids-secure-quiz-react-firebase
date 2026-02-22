@@ -60,7 +60,7 @@ export default function LoginPage() {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 mb-3 sm:mb-4">
               <div className="w-20 h-12 sm:w-25 sm:h-15 rounded-xl bg-white flex items-center justify-center">
                 <img
-                  src="/img/LogoVector.png"
+                  src="/img/image.png"
                   alt="Logo"
                   className="w-20 h-12 sm:w-25 sm:h-30 object-contain"
                 />

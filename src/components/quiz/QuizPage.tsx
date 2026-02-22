@@ -142,7 +142,7 @@ export default function QuizPage() {
             <div className="flex items-center gap-2">
               <div className="w-16 h-10 sm:w-20 sm:h-12 rounded-lg bg-white flex items-center justify-center">
                 <img
-                  src="/img/LogoVector.png"
+                  src="/img/image.png"
                   alt="Logo"
                   className="w-16 h-10 sm:w-20 sm:h-12 object-contain"
                 />
